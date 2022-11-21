@@ -2,17 +2,17 @@ import express from "express";
 import cors from "cors"
 import joi from 'joi'
 import dotenv from "dotenv"
-import dayjs from "dayjs";
 import {MongoClient} from "mongodb"
-import bcrypt from 'bcrypt'
-import {registration, signIn} from "./controllers/accountController.js"
-import {getRecords, inputRecord, outputRecord} from "./controllers/transactionsController.js"
+import accountRouter from "./routes/transactionsRouter.js";
+import transactionsRouter from "./routes/accountRouter.js";
 dotenv.config()
 
 
 const app = express()
-app.use(express.json())
-app.use(cors())
+const router = express.Router()
+app.use(router)
+router.use(express.json())
+router.use(cors())
 
 const mongoClient = new MongoClient(process.env.MONGO_URI)
 export const db = mongoClient.db("mywallet")
@@ -29,16 +29,8 @@ export const transactionSchema = joi.object({
     description:joi.required(),
 })
 
-
-app.post("/cadastro", registration)
-
-app.post("/login", signIn)
-
-app.get("/records", getRecords)
-
-app.post("/records/input", inputRecord)
-
-app.post("/records/output", outputRecord)
+router.use(accountRouter)
+router.use(transactionsRouter)
 
 app.listen(5000, () => {
     console.log('rodando na 5000')

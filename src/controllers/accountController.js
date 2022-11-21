@@ -44,18 +44,23 @@ export async function signIn (req, res) {
 
     try{
         
-        const user = await db.collection('transactions').findOne({email:email})
+        const user = await db.collection('users').findOne({email:email})
         const token = uuid()
+        const inSession = await db.collection('sessions').findOne({userId:user._id})
+        
+        if(inSession){
+            await db.collection('sessions').deleteOne({userId:user._id})
+        }
 
         await db.collection('sessions').insertOne({
             userId: user._id,
-            token
+            token:token
         })
 
         res.status(200).send({
             name:account.name,
             email:email,
-            token            
+            token:token            
         })
     } catch (err) {
         res.sendStatus(500)

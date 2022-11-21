@@ -1,6 +1,7 @@
 import { transactionSchema } from '../app.js'
 import {db} from "../app.js"
 import dayjs from 'dayjs'
+import { ObjectId } from 'mongodb'
 
 
 export async function getRecords (req, res)  {
@@ -68,4 +69,19 @@ export async function outputRecord (req, res) {
         res.sendStatus(500)
     }
 
+}
+
+export async function deleteRecord (req, res) {
+
+    const recordId = req.params.id
+    if(!recordId){
+        return res.sendStatus(404)
+    }
+
+    try {
+        await db.collection('transactions').deleteOne({_id:ObjectId(recordId)})
+        res.sendStatus(200)
+    } catch (err) {
+        res.sendStatus(500)
+    }
 }
