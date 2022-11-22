@@ -32,6 +32,6 @@ export const transactionSchema = joi.object({
 router.use(accountRouter)
 router.use(transactionsRouter)
 
-app.listen(5000, () => {
-    console.log('running on port:5000')
+app.listen(process.env.PORT, () => {
+    console.log('running on port' + process.env.PORT)
 })
