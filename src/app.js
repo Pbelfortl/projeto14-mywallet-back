@@ -33,5 +33,5 @@ router.use(accountRouter)
 router.use(transactionsRouter)
 
 app.listen(process.env.PORT, () => {
-    console.log('running on port' + process.env.PORT)
+    console.log('running on port'+process.env.PORT)
 })
